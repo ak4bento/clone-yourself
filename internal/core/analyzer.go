@@ -2,7 +2,6 @@ package core
 
 import (
 	"strings"
-  "fmt"
 )
 
 func ExtractKeywords(text string) []string {
@@ -11,17 +10,30 @@ func ExtractKeywords(text string) []string {
 	words := strings.Fields(text)
 	return words
 }
-
 func AnalyzeQuestion(question string) string {
-	// Cek interaksi mirip
-	if prevQ, prevA, _ := FindSimilarInteraction(question); prevA != "" {
-		return fmt.Sprintf("Pernah ditanyakan: \"%s\"\nJawaban: %s", prevQ, prevA)
+	knowledge, err := FindRelevantKnowledge(question)
+	if err != nil || knowledge == "" {
+		return "❌ Saya belum memiliki pengetahuan tentang itu."
 	}
 
-	// Kalau belum pernah, cari dari knowledge DB
-	answer, err := FindRelevantKnowledge(question)
+	// Kirim ke LLM
+	answer, err := GenerateAnswerWithLLM(knowledge, question)
 	if err != nil {
-		return "Terjadi error saat mencari jawaban."
+		return "⚠️ Gagal menghubungi LLM: " + err.Error()
 	}
+
 	return answer
 }
+// func AnalyzeQuestion(question string) string {
+// 	// Cek interaksi mirip
+// 	if prevQ, prevA, _ := FindSimilarInteraction(question); prevA != "" {
+// 		return fmt.Sprintf("Pernah ditanyakan: \"%s\"\nJawaban: %s", prevQ, prevA)
+// 	}
+//
+// 	// Kalau belum pernah, cari dari knowledge DB
+// 	answer, err := FindRelevantKnowledge(question)
+// 	if err != nil {
+// 		return "Terjadi error saat mencari jawaban."
+// 	}
+// 	return answer
+// }

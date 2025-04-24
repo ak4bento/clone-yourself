@@ -5,7 +5,7 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "ai4ben",
+	Use:   "cyourself",
 	Short: "AI clone of Ben",
 	Long:  `AI yang dibangun berdasarkan karakter dan pengetahuan Ben.`,
 }

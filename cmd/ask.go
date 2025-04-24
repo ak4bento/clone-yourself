@@ -13,11 +13,12 @@ var askCmd = &cobra.Command{
 		question, _ := cmd.Flags().GetString("q")
 		fmt.Printf("[ASK] Pertanyaan: %s\n", question)
 
-		answer, err := core.FindRelevantKnowledge(question)
-		if err != nil {
-			fmt.Println("Gagal mencari jawaban:", err)
-			return
-		}
+		// answer, err := core.FindRelevantKnowledge(question)
+		answer := core.AnalyzeQuestion(question)
+		// if err != nil {
+		// 	fmt.Println("Gagal mencari jawaban:", err)
+		// 	return
+		// }
 
 		fmt.Println("[JAWABAN]:", answer)
 
