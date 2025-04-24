@@ -1,8 +1,9 @@
 package server
 
 import (
-	"net/http"
+	"github.com/ak4bento/clone-yourself/internal/core"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 type AskRequest struct {
@@ -22,8 +23,11 @@ func StartAPI() {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-		// TODO: Integrasi dengan memory dan analyzer
-		c.JSON(http.StatusOK, AskResponse{Answer: "Docker itu ibarat kontainer di pelabuhan..."})
+
+		answer, _ := core.FindRelevantKnowledge(req.Question)
+		core.LearnFromInteraction(req.Question, answer)
+
+		c.JSON(http.StatusOK, AskResponse{Answer: answer})
 	})
 
 	r.Run() // :8080
