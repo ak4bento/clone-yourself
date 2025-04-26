@@ -143,7 +143,7 @@ func FindRelevantKnowledge(question string) (string, error) {
 	}
 
 	if len(matched) == 0 {
-		return "Maaf, aku belum punya pengetahuan soal itu.", nil
+		return "", nil
 	}
 
 	// Urutkan dari skor tertinggi ke terendah

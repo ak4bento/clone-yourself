@@ -10,10 +10,11 @@ func ExtractKeywords(text string) []string {
 	words := strings.Fields(text)
 	return words
 }
+
 func AnalyzeQuestion(question string) string {
 	knowledge, err := FindRelevantKnowledge(question)
 	if err != nil || knowledge == "" {
-		return "❌ Saya belum memiliki pengetahuan tentang itu."
+		return "❌ Saya belum bisa memberikan jawaban untuk pertanyaan ini. Silakan coba lagi nanti."
 	}
 
 	// Kirim ke LLM

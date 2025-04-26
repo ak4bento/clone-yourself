@@ -47,7 +47,11 @@ func GenerateAnswerWithLLM(context, question string) (string, error) {
         {
             Role: "system",
             Content: []Content{
-                { Type: "text", Text: "Jawablah berdasarkan pengetahuan berikut. Jika tidak relevan, katakan tidak tahu.\n\n" + context },
+                { 
+                  Type: "text", 
+                  Text: "Jawablah berdasarkan pengetahuan berikut. Jika tidak relevan," + 
+                        "katakan tidak tahu.\n\n" + context,
+                },
             },
         },
         {
@@ -104,5 +108,6 @@ func GenerateAnswerWithLLM(context, question string) (string, error) {
 		return "", fmt.Errorf("no response from LLM")
 	}
 
+  fmt.Println("[RELEVANT KNOWLEDGE]:", context)
 	return res.Choices[0].Message.Content, nil
 }
