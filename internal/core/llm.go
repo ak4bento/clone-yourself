@@ -41,18 +41,31 @@ type LLMResponse struct {
 func GenerateAnswerWithLLM(context, question string) (string, error) {
 	url := "https://openrouter.ai/api/v1/chat/completions"
 
+  CurrentProfile, err := LoadAIProfile("profile.yaml")
+
+  prompt := fmt.Sprintf(`
+  Kamu adalah %s, AI yang menjawab dengan gaya %s dan nada %s.
+  Jawabanmu harus dalam bahasa %s, dan gunakan gaya %s sesuai kepribadian saya.
+  
+  Jawablah berdasarkan pengetahuan mu. Jika tidak relevan, katakan tidak tahu.\n\n
+  Berikut adalah pengetahuan yang kamu miliki:\n%s\n\n
+  Pertanyaan user:\n%s
+  `, 
+    CurrentProfile.Name,
+    CurrentProfile.Style,
+    CurrentProfile.Tone,
+    CurrentProfile.Language,
+    CurrentProfile.Style,
+    context, 
+    question,
+  )
+
 	data := LLMRequest{
 		Model: "meta-llama/llama-4-maverick:free",
     Messages: []Message{
         {
             Role: "system",
-            Content: []Content{
-                { 
-                  Type: "text", 
-                  Text: "Jawablah berdasarkan pengetahuan berikut. Jika tidak relevan," + 
-                        "katakan tidak tahu.\n\n" + context,
-                },
-            },
+            Content: []Content{{Type: "text", Text: prompt}},
         },
         {
             Role: "user",
@@ -61,17 +74,6 @@ func GenerateAnswerWithLLM(context, question string) (string, error) {
             },
         },
     },
-		// Messages: []Message{
-		// 	{
-		// 		Role: "user",
-		// 		Content: []Content{
-		// 			{
-		// 				Type: "text",
-		// 				Text: question,
-		// 			},
-		// 		},
-		// 	},
-		// },
 	}
 
 	payload, err := json.Marshal(data)
