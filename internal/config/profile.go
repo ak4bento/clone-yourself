@@ -1,12 +1,5 @@
 package config
 
-import (
-  "fmt"
-  "os"
-  "path/filepath"
-  "github.com/spf13/viper"
-)
-
 // Config struct to hold configuration values
 type Config struct {
   Port int
